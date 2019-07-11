@@ -1,14 +1,12 @@
 <template>
-  <div>
-    <router-view/>
-  </div>
+  <div>login</div>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 
 @Component
-export default class Home extends Vue {
+export default class Login extends Vue {
 
 }
 </script>
