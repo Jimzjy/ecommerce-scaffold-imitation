@@ -1,5 +1,6 @@
 import Mock from 'mockjs'
-import { URL_LOGIN, TOKEN_NAME, URL_LOGOUT } from '@/service'
+import { URL_LOGIN, TOKEN_NAME, URL_LOGOUT, URL_DASHBOARD } from '@/service'
+import { realtime, notifications, functions, saleData } from './data'
 
 Mock.setup({
   timeout: '200-600'
@@ -7,7 +8,7 @@ Mock.setup({
 
 interface Response {
   status: number,
-  message: string,
+  message?: string,
   extra?: any
 }
 
@@ -20,6 +21,7 @@ interface Options {
 // interface HandleFunction {
 //   (options: Options): Response
 // }
+const AUTH_ERROR = '验证失败'
 
 Mock.mock(URL_LOGIN, 'post', (options: Options): Response => {
   const body = JSON.parse(options.body || '')
@@ -27,11 +29,11 @@ Mock.mock(URL_LOGIN, 'post', (options: Options): Response => {
   if (body.username === 'admin' && body.password === 'passwd') {
     const date = new Date()
     date.setDate(date.getDate() + 3)
-    localStorage.setItem(TOKEN_NAME, date.toString())
 
     return {
       status: 200,
-      message: '登录成功'
+      message: '登录成功',
+      extra: date.toString()
     }
   }
   return {
@@ -40,8 +42,8 @@ Mock.mock(URL_LOGIN, 'post', (options: Options): Response => {
   }
 })
 
-function authToken (data: any): boolean {
-  const token = data.token
+function authToken (body: any): boolean {
+  const token = body.token
   if (token == null || token === '') {
     return false
   }
@@ -51,11 +53,12 @@ function authToken (data: any): boolean {
 }
 
 Mock.mock(URL_LOGOUT, 'post', (options: Options): Response => {
-  const err = authToken(options.body)
+  const body = JSON.parse(options.body || '')
+  const err = authToken(body)
   if (!err) {
     return {
       status: 401,
-      message: '验证过期'
+      message: AUTH_ERROR
     }
   }
 
@@ -64,5 +67,26 @@ Mock.mock(URL_LOGOUT, 'post', (options: Options): Response => {
   return {
     status: 200,
     message: '退出成功'
+  }
+})
+
+Mock.mock(URL_DASHBOARD, 'get', (options: Options): Response => {
+  const body = JSON.parse(options.body || '')
+  const err = authToken(body)
+  if (!err) {
+    return {
+      status: 401,
+      message: AUTH_ERROR
+    }
+  }
+
+  return {
+    status: 200,
+    extra: {
+      realtime,
+      notifications,
+      functions,
+      saleData
+    }
   }
 })

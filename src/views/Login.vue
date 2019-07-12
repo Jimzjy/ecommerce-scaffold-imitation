@@ -25,9 +25,9 @@
       </div>
     </div>
     <footer class="footer">
-      <a href="//github.com/Jimzjy/ecommerce-scaffold-imitation">帮助</a>
-      <a href="//github.com/Jimzjy/ecommerce-scaffold-imitation">隐私</a>
-      <a href="//github.com/Jimzjy/ecommerce-scaffold-imitation">条款</a>
+      <a :href="repoAddress">帮助</a>
+      <a :href="repoAddress">隐私</a>
+      <a :href="repoAddress">条款</a>
       <div class="copyright">Jimzjy</div>
     </footer>
   </div>
@@ -35,7 +35,8 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import Http, { URL_LOGIN } from '@/service'
+import Http, { URL_LOGIN, TOKEN_NAME } from '@/service'
+import { REPO_ADDRESS } from '@/consts'
 
 @Component
 export default class Login extends Vue {
@@ -50,6 +51,7 @@ export default class Login extends Vue {
     password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
   }
   loading = false
+  repoAddress = REPO_ADDRESS
 
   onLoginClick () {
     const form: any = this.$refs.loginForm
@@ -62,6 +64,8 @@ export default class Login extends Vue {
         }).then((data) => {
           this.loading = false
           if (data) {
+            localStorage.setItem(TOKEN_NAME, data.extra)
+            Http.setToken(data.extra)
             this.$router.replace({ name: this.to })
           }
         })
@@ -74,7 +78,6 @@ export default class Login extends Vue {
 <style lang="scss" scoped>
 @import '@/assets/_global.scss';
 
-$text-color: #333333;
 #login {
   background: url('../assets/img/login-background.jpg') 0 / cover;
   height: 100vh;
@@ -112,7 +115,6 @@ $text-color: #333333;
       font-size: 28px;
       font-weight: bold;
       margin-bottom: 30px;
-      color: $text-color;
     }
 
     .login-button {
@@ -123,19 +125,14 @@ $text-color: #333333;
     .register {
       font-size: 14px;
       text-align: center;
-      color: adjust-color($color: $primary-color, $lightness: 15%);
+      color: adjust-color($color: $primary-color, $lightness: 10%);
     }
   }
 
   .description {
     .title {
-      color: $text-color;
       font-size: 48px;
       font-weight: bold;
-    }
-
-    .text {
-      color: $text-color;
     }
   }
 }
@@ -150,7 +147,7 @@ $text-color: #333333;
   & > a {
     font-size: 14px;
     margin: 20px;
-    color: adjust-color($color: $primary-color, $lightness: -15%);
+    color: adjust-color($color: $primary-color, $lightness: -10%);
   }
 
   .copyright {

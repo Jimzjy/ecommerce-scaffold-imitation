@@ -1,12 +1,19 @@
 import Axios, { Method, AxiosResponse } from 'axios'
 import vue from '../main'
-import { TOKEN_NAME } from '.'
+
+const TOKEN_NAME = 'esi-token'
+export {
+  TOKEN_NAME
+}
 
 const axios = Axios.create()
 let token = localStorage.getItem(TOKEN_NAME) || ''
 
 export default class Http {
   private static async request (method: Method, url: string, data: any): Promise<any> {
+    if (vue) {
+      vue.$store.commit('setLoading', true)
+    }
     const params: any = { method, url, data: {} }
 
     if (method === 'GET') {
@@ -26,6 +33,10 @@ export default class Http {
         vue.$message({
           message: response.data.message
         })
+      }
+
+      if (vue) {
+        vue.$store.commit('setLoading', false)
       }
       return response.data
     }, (err) => {
@@ -47,7 +58,14 @@ export default class Http {
       })
     }
 
+    if (vue) {
+      vue.$store.commit('setLoading', false)
+    }
     return undefined
+  }
+
+  static setToken (t : string) {
+    token = t
   }
 
   static get (url: string, data: any): Promise<any> {

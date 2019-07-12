@@ -35,11 +35,11 @@
           </el-menu-item>
         </el-menu>
       </div>
-      <div class="content">
+      <div class="content" v-loading="loading">
         <div class="container"><router-view /></div>
         <div class="footer">
           <img class="logo" src="../assets/img/logo.png"/>
-          <a href="//element.eleme.cn" class="text">Powered by Element</a>
+          <a :href="repoAddress" class="text">Source Code</a>
         </div>
       </div>
     </div>
@@ -50,12 +50,16 @@
 import { Vue, Component } from 'vue-property-decorator'
 import { LinkButton } from '@/models'
 import Http, { URL_LOGOUT } from '../service'
+import { mapState } from 'vuex'
+import { REPO_ADDRESS } from '../consts'
 
-@Component
+@Component({
+  computed: mapState(['loading'])
+})
 export default class Home extends Vue {
   headerButtons: Array<LinkButton> = [
-    { iconClass: 'el-icon-service', text: '反馈', to: '//github.com/Jimzjy/ecommerce-scaffold-imitation' },
-    { iconClass: 'el-icon-help', text: '帮助', to: '//github.com/Jimzjy/ecommerce-scaffold-imitation' }
+    { iconClass: 'el-icon-service', text: '反馈', to: REPO_ADDRESS },
+    { iconClass: 'el-icon-help', text: '帮助', to: REPO_ADDRESS }
   ]
 
   navMenu: Array<LinkButton> = [
@@ -67,6 +71,8 @@ export default class Home extends Vue {
     { iconClass: 'el-icon-user', text: '客户', to: 'customer' },
     { iconClass: 'el-icon-setting', text: '设置', to: 'setting' }
   ]
+
+  repoAddress = REPO_ADDRESS
 
   onLogoutClick () {
     Http.post(URL_LOGOUT, {}).then((data) => {
@@ -134,7 +140,8 @@ $defalut-space: 20px;
 .main {
   display: flex;
   flex-flow: row nowrap;
-  height: calc(100vh - #{$header-height});
+  height: 100%;
+  min-height: 100vh;
 
   .aside {
     padding-top: $defalut-space;
@@ -145,10 +152,6 @@ $defalut-space: 20px;
     padding: $defalut-space;
     width: 100%;
     background: #F5F5F5;
-
-    .container {
-      height: 400px;
-    }
 
     .footer {
       padding: $defalut-space 0;
