@@ -3,13 +3,16 @@ import ElementUI from 'element-ui'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import './mock'
 import './element-variables.scss'
 Vue.config.productionTip = false
 
 Vue.use(ElementUI)
 
-new Vue({
+const vue = new Vue({
   router,
   store,
   render: h => h(App)
 }).$mount('#app')
+
+export default vue
