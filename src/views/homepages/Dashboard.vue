@@ -38,11 +38,34 @@
         <app-selector :props="saleArray" @changeData="changeSaleData"/>
         <div class="sale-data-data">
           <div class="sale-data-data-item" v-for="(item, index) in currentSaleData" :key="index">
-            <div class="sale-data-data-item-title">{{ item.title }}</div>
-            <div class="sale-data-data-item-value">{{ item.value }}</div>
+            <div class="sale-data-data-item-title">{{ data.saleData.dataText[index] }}</div>
+            <div class="sale-data-data-item-value">{{ item }}</div>
           </div>
         </div>
-        <v-chart :options="saleChart" class="sale-data-chart" autoresize/>
+        <v-chart :options="{
+          tooltip: {
+            trigger: 'axis',
+            backgroundColor: 'rgba(255,255,255,0.8)',
+            textStyle: { color: '#333333' }
+          },
+          grid: {
+            left: '0%',
+            right: '0%',
+            bottom: '0%',
+            containLabel: true
+          },
+          xAxis: {
+            axisLine: { show: false },
+            data: data.saleData.chartText
+          },
+          yAxis: {
+            axisLine: { show: false },
+            splitLine: { lineStyle: { type: 'dotted' } },
+            type: 'value'
+          },
+          color: ['#5093FF', '#31C25B'],
+          series: [{ data: data.saleData.chartData[0], type: 'line', name: saleArray[0] }, { data: data.saleData.chartData[1], type: 'line', name: saleArray[1] }]
+        }" class="sale-data-chart" autoresize/>
       </div>
     </app-card>
   </div>
@@ -57,28 +80,6 @@ export default class Dashboard extends Vue {
   data: any = null
   saleArray = ['门店', '网店', '全店']
   currentSaleData = []
-  saleChart = {
-    tooltip: {
-      trigger: 'axis',
-      backgroundColor: 'rgba(255,255,255,0.8)',
-      textStyle: { color: '#333333' }
-    },
-    grid: {
-      left: '0%',
-      right: '0%',
-      bottom: '0%',
-      containLabel: true
-    },
-    xAxis: {
-      type: 'category',
-      data: ['01/01', '02/01', '03/01', '04/01', '05/01', '06/01', '07/01', '08/01', '09/01', '10/01', '11/01', '12/01']
-    },
-    yAxis: {
-      type: 'value'
-    },
-    color: ['#5093FF', '#31C25B'],
-    series: [{ data: [], type: 'line', name: '门店' }, { data: [], type: 'line', name: '网店' }]
-  }
 
   created () {
     this.updateData()
@@ -87,14 +88,12 @@ export default class Dashboard extends Vue {
   updateData () {
     Http.get(URL_DASHBOARD, {}).then((response) => {
       this.data = response.extra
-      this.saleChart.series[0].data = this.data.saleData[0].chartData
-      this.saleChart.series[1].data = this.data.saleData[1].chartData
       this.changeSaleData(0)
     })
   }
 
   changeSaleData (index: number) {
-    this.currentSaleData = this.data.saleData[index].data
+    this.currentSaleData = this.data.saleData.data[index]
   }
 }
 </script>
@@ -190,10 +189,12 @@ $min-width: 500px;
 
   &-data {
     display: flex;
-    justify-content: space-between;
-    margin: 20px 0;
+    justify-content: space-around;
+    margin-top: 20px;
 
     &-item {
+      text-align: center;
+
       &-title {
         font-size: 14px;
         margin-bottom: 10px;

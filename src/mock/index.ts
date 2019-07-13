@@ -1,6 +1,6 @@
 import Mock from 'mockjs'
-import { URL_LOGIN, TOKEN_NAME, URL_LOGOUT, URL_DASHBOARD } from '@/service'
-import { realtime, notifications, functions, saleData } from './data'
+import { URL_LOGIN, TOKEN_NAME, URL_LOGOUT, URL_DASHBOARD, URL_STAT_CENTER } from '@/service'
+import { realtime, notifications, functions, saleData, statRecord, statOverview, statMember, statSale, statFlow, statActivePage, statMostViewed } from './data'
 
 Mock.setup({
   timeout: '200-600'
@@ -87,6 +87,30 @@ Mock.mock(URL_DASHBOARD, 'get', (options: Options): Response => {
       notifications,
       functions,
       saleData
+    }
+  }
+})
+
+Mock.mock(URL_STAT_CENTER, 'get', (options: Options): Response => {
+  const body = JSON.parse(options.body || '')
+  const err = authToken(body)
+  if (!err) {
+    return {
+      status: 401,
+      message: AUTH_ERROR
+    }
+  }
+
+  return {
+    status: 200,
+    extra: {
+      statRecord,
+      statOverview,
+      statMember,
+      statSale,
+      statFlow,
+      statActivePage,
+      statMostViewed
     }
   }
 })

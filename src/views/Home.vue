@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="home">
     <header class="header">
       <router-link :to="{ name: 'dashboard' }">
         <img src="../assets/img/logo.png" class="logo" />
@@ -140,8 +140,7 @@ $defalut-space: 20px;
 .main {
   display: flex;
   flex-flow: row nowrap;
-  height: 100%;
-  min-height: 100vh;
+  height: calc(100vh - #{$header-height});
 
   .aside {
     padding-top: $defalut-space;
@@ -152,6 +151,7 @@ $defalut-space: 20px;
     padding: $defalut-space;
     width: 100%;
     background: #F5F5F5;
+    overflow: scroll;
 
     .footer {
       padding: $defalut-space 0;
