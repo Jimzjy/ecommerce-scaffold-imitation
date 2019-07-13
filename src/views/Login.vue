@@ -21,7 +21,7 @@
         <div>
           <el-button class="login-button" type="primary" @click="onLoginClick" :loading="loading">登录</el-button>
         </div>
-        <div class="register">立即注册</div>
+        <div class="register">用户名: admin 密码: passwd</div>
       </div>
     </div>
     <footer class="footer">
