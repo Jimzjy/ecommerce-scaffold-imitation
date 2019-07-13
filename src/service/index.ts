@@ -11,6 +11,7 @@ const URL_GOODS = API + '/goods'
 const URL_ORDER_LIST = API + '/orderlist'
 const URL_CUSTOMER = API + '/customer'
 const URL_SETTING = API + '/setting'
+const URL_COMMON_DATA = API + '/commondata'
 
 export {
   API,
@@ -23,5 +24,6 @@ export {
   URL_GOODS,
   URL_ORDER_LIST,
   URL_CUSTOMER,
-  URL_SETTING
+  URL_SETTING,
+  URL_COMMON_DATA
 }

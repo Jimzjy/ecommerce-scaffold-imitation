@@ -1,6 +1,6 @@
 import Mock from 'mockjs'
-import { URL_LOGIN, TOKEN_NAME, URL_LOGOUT, URL_DASHBOARD, URL_STAT_CENTER, URL_TRADE } from '@/service'
-import { realtime, notifications, functions, saleData, statRecord, statOverview, statMember, statSale, statFlow, statActivePage, statMostViewed, tradeStat, tradeOverview, tradeTrend } from './data'
+import { URL_LOGIN, TOKEN_NAME, URL_LOGOUT, URL_DASHBOARD, URL_STAT_CENTER, URL_TRADE, URL_COMMON_DATA, URL_SETTING } from '@/service'
+import { realtime, notifications, functions, saleData, statRecord, statOverview, statMember, statSale, statFlow, statActivePage, statMostViewed, tradeStat, tradeOverview, tradeTrend, commonData } from './data'
 
 Mock.setup({
   timeout: '200-600'
@@ -132,5 +132,39 @@ Mock.mock(URL_TRADE, 'get', (options: Options): Response => {
       tradeOverview,
       tradeTrend
     }
+  }
+})
+
+Mock.mock(URL_COMMON_DATA, 'get', (options: Options): Response => {
+  const body = JSON.parse(options.body || '')
+  const err = authToken(body)
+  if (!err) {
+    return {
+      status: 401,
+      message: AUTH_ERROR
+    }
+  }
+
+  return {
+    status: 200,
+    extra: {
+      commonData
+    }
+  }
+})
+
+Mock.mock(URL_SETTING, 'post', (options: Options): Response => {
+  const body = JSON.parse(options.body || '')
+  const err = authToken(body)
+  if (!err) {
+    return {
+      status: 401,
+      message: AUTH_ERROR
+    }
+  }
+
+  return {
+    status: 200,
+    message: '设置成功'
   }
 })

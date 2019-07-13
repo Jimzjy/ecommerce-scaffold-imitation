@@ -168,6 +168,11 @@ const tradeTrend = {
   ]
 }
 
+const commonData = {
+  header: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
+  data: { A: 100, B: 200, C: 300, D: 400, E: 500, F: 600, G: 700 }
+}
+
 export {
   realtime,
   notifications,
@@ -182,5 +187,6 @@ export {
   statMostViewed,
   tradeStat,
   tradeOverview,
-  tradeTrend
+  tradeTrend,
+  commonData
 }
