@@ -17,7 +17,7 @@ export default class Http {
     const params: any = { method, url, data: {} }
 
     if (method === 'GET') {
-      url += this.formatQuery(data)
+      params.url += this.formatQuery(data)
     } else {
       params.data = data
     }
